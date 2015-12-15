@@ -53,22 +53,46 @@ for (i=0; i<=4; i++) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
+//Player code------------------------------------------
 
-
-var Player = function() {
-	
+var Player = function(x,y) {
+	this.x = x;
+	this.y = y;
+	this.sprite = 'images/char-boy.png';
 };
 
 Player.prototype.update = function(dt) {
-	
+	this.x * (dt);
+	this.y * (dt);
 };
+
+Player.prototype.handleInput = function(direction){
+	if(direction === 'left'){
+		this.x -= 100;
+	}
+	if(direction === 'up'){
+		this.y -= 82.5;
+	}
+	if(direction === 'right'){
+		this.x += 100;
+	}
+	(direction === 'down'){
+		this.y += 82.5;
+	}
+ };
+
 
 // Draw the player on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-var player = new Player();
+
+
+
+
+ var player = new Player(200,400);
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -80,5 +104,5 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    player.prototype.handleInput(allowedKeys[e.keyCode]);
 });
