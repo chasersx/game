@@ -66,6 +66,11 @@ Player.prototype.update = function(dt) {
 	this.y * (dt);
 };
 
+// Draw the player on the screen, required method for game
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
 Player.prototype.handleInput = function(direction){
 	if(direction === 'left'){
 		this.x -= 100;
@@ -76,20 +81,10 @@ Player.prototype.handleInput = function(direction){
 	if(direction === 'right'){
 		this.x += 100;
 	}
-	(direction === 'down'){
+	if(direction === 'down'){
 		this.y += 82.5;
 	}
  };
-
-
-// Draw the player on the screen, required method for game
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-
-
-
 
  var player = new Player(200,400);
 
@@ -104,5 +99,5 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    player.prototype.handleInput(allowedKeys[e.keyCode]);
+    player.handleInput(allowedKeys[e.keyCode]);
 });
