@@ -1,3 +1,5 @@
+var WATER_ROW = -12.50;
+
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
@@ -62,8 +64,15 @@ var Player = function(x,y) {
 };
 
 Player.prototype.update = function(dt) {
+	
+	
 	this.x * (dt);
 	this.y * (dt);
+	
+	if (this.y <= WATER_ROW){
+		player.reset();
+	}
+		
 };
 
 // Draw the player on the screen, required method for game
@@ -72,6 +81,15 @@ Player.prototype.render = function() {
 };
 
 Player.prototype.handleInput = function(direction){
+	if (this.x == 0 && direction === 'left'){
+		return;
+	}
+	if (this.x == 400 && direction === 'right'){
+		return;
+	}
+	if (this.y == 400 && direction === 'down'){
+		return;
+	}
 	if(direction === 'left'){
 		this.x -= 100;
 	}
@@ -85,8 +103,13 @@ Player.prototype.handleInput = function(direction){
 		this.y += 82.5;
 	}
  };
+ 
+ Player.prototype.reset = function() {
+	 this.x = 200;
+	 this.y = 400;
+ }
 
- var player = new Player(200,400);
+ var player = new Player(200,-12.50);
 
 
 // This listens for key presses and sends the keys to your
