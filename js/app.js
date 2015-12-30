@@ -1,72 +1,46 @@
 var WATER_ROW = -12.50;
 	LIFE_NUMBER = 3,
-	ENEMY_X_FORWARD = 0,
-    ENEMY_X_REVERSE = 700;
+	ENEMY_X_FORWARD = 0;
 
 //Declare all variables that are going to be constant and hence, immutable.
 var X_OFFSET = 15,
     Y_OFFSET = 83,
     HIDE = -101,
     Y_ARRAY = [63, 146, 229],
+	SPEED_ARRAY = [100,250,300,450],
+	RESET_ARRAY = [-100,-200,-50,-300],
     PLAYER_X = 200,
     PLAYER_Y = 400;
-    //WATER_ARRAY = [-100, 0, 100, 200, 300, 500, 600, 700, 800],
-    //LIFE_NUMBER = 3;
 
 /* Define Enemy class. All instances of the enemy class will acquire the 
    variables declared within the class.
 */
 var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
-    this.x = ENEMY_X_FORWARD;
+    this.x = RESET_ARRAY[Math.floor(Math.random() * 4)];//ENEMY_X_FORWARD;
     this.y = Y_ARRAY[Math.floor(Math.random() * 3)];
-    this.speed = (Math.floor(Math.random() * 2) + 1) * 100;
+    this.speed =  SPEED_ARRAY[Math.floor(Math.random() * 4)];
 };
 
 Enemy.prototype.update = function(dt) {
-    this.x += this.speed * dt;
-	if (this.x < -49) {
+	SPEED_ARRAY[Math.floor(Math.random() * 4)];
+	this.x += this.speed * dt;
+	if (this.x < -500) {
         this.sprite = 'images/enemy-bug.png';
-        this.x = ENEMY_X_FORWARD;
-        this.speed = (Math.floor(Math.random() * 2) + 1) * 100;
+        this.x = RESET_ARRAY[Math.floor(Math.random() * 4)];//ENEMY_X_FORWARD;
+        this.speed = SPEED_ARRAY[Math.floor(Math.random() * 4)];
         this.x += this.speed * dt;
         this.y = Y_ARRAY[Math.floor(Math.random() * 3)];
     }
-	if (this.x > 500) {
+	if (this.x > 750) {
 		this.reset();
 	}
 };
 
 Enemy.prototype.reset = function() {
-	this.x = ENEMY_X_FORWARD;
+	this.x = RESET_ARRAY[Math.floor(Math.random() * 4)];// ENEMY_X_FORWARD;
     this.y = Y_ARRAY[Math.floor(Math.random() * 3)];
  }
-
-// Enemies our player must avoid
-// // var enemy = function(x, y) {//, speed) {
-    // // // variables applied to each of our instances go here,
-    // // // we've provided one for you to get started
-
-    // // // the image/sprite for our enemies, this uses
-    // // // a helper we've provided to easily load images
-	// // this.x = x;
-	// // this.y = y;
-	// // this.speed = math.floor(math.random() * (100 - 200) + 200);//speed;
-    // // this.sprite = 'images/enemy-bug.png';
-	
-// // };
-
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-// Enemy.prototype.update = function(dt) {
-    // // You should multiply any movement by the dt parameter
-    // // which will ensure the game runs at the same speed for
-    // // all computers.
-	// s = (Math.random() * 50 * dt);
-    // this.x += s;
-    // if (this.x > 480) this.x = 0;
-    // //this.call(this,x, y);
-// };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
