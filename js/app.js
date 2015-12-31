@@ -4,10 +4,11 @@ var WATER_ROW = -12.50;
 	ENEMY_X_FORWARD = 0,
 	X_OFFSET = 15,
     Y_OFFSET = 83,
-    HIDE = -101,
+    HIDE_GEM = -101,
     Y_ARRAY = [63, 146, 229],
 	SPEED_ARRAY = [150,250,300,450],
-	ENEMY_X_ARRAY = [-100,-150,-200,-250,-300];
+	ENEMY_X_ARRAY = [-100,-150,-200,-250,-300],
+	GEM_ARRAY = ['images/Gem_Green.png','images/Gem_Orange.png','images/Gem_Purple.png','images/Gem_Red.png','images/Gem_Blue.png'];
 
 /* Define Enemy class. All instances of the enemy class will acquire the 
    variables declared within the class.
@@ -54,16 +55,17 @@ var Player = function(x,y) {
 	this.x = x;
 	this.y = y;
 	this.score = 0;
+	this.gems = 0;
 	this.sprite = 'images/char-boy.png';
 };
 
 Player.prototype.update = function(dt) {
 	this.x * (dt);
 	this.y * (dt);
-	if (this.y <= WATER_ROW){
-		this.score += 1;
-		player.reset();
-	}	
+	//if (this.y <= WATER_ROW){
+	//	this.score += 1;
+	//	player.reset();
+	//}	
 };
 
 // Draw the player on the screen, required method for game
@@ -120,6 +122,27 @@ Life.prototype.die = function() {
 	}
 };
 
+var Gem = function(image, x, y) {
+    this.number = 5;
+	this.sprite = image;
+    this.x = x;
+    this.y = y;
+};
+
+Gem.prototype.render = function() {
+	ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 75, 110);
+    //for (var x = 0; x < this.number; x++) {
+    //    ctx.drawImage(Resources.get(GEM_ARRAY[x]), x * 100 + 15, 20, 75, 110);
+    //}
+};
+
+Gem.prototype.reset = function() {
+	for(var i = 0; i < 5; i++) {
+		allGems[i].x = i * 100 + 15;	
+		allGems[i].y = 20;
+	}
+ };
+
 //Score class - draw the score on the screen
 var Score = function() {
 	player.score = 0;
@@ -132,7 +155,7 @@ Score.prototype.render = function() {
 
 Score.prototype.reset = function() {
 	 player.score = 0;
- }
+ };
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -143,11 +166,26 @@ for(var i=0; i<3; i++){
 allEnemies.push(new Enemy());
 }
  
- var player = new Player(200,400);
- var life = new Life();
- var score = new Score();
+var player = new Player(200,400);
+var life = new Life();
+var score = new Score();
+//var gem = new Gem();
+
+var green = new Gem('images/Gem_Green.png', 15, 20);
+var orange = new Gem('images/Gem_Orange.png', 115, 20);
+var purple = new Gem('images/Gem_Purple.png', 215, 20);
+var red = new Gem('images/Gem_Red.png', 315, 20);
+var blue = new Gem('images/Gem_Blue.png', 415, 20);
+var allGems = [];
+allGems.push(green);
+allGems.push(orange);
+allGems.push(purple);
+allGems.push(red);
+allGems.push(blue);
+
+
  
- function checkCollisions(allEnemies, player) {
+function checkCollisions(allEnemies, player) {
     for(var i = 0; i < 3; i++) {
 		if (allEnemies[i].x < player.x + 50 && allEnemies[i].x + 50 > player.x &&
             allEnemies[i].y < player.y +  50 && 50 + allEnemies[i].y > player.y){
@@ -155,6 +193,28 @@ allEnemies.push(new Enemy());
 				player.reset();
         }
     }
+}
+
+function checkGemCollisions(allGems, player) {
+	if (player.y == WATER_ROW) {
+		for(var i = 0; i < 5; i++) {
+			if (allGems[i].x < player.x + 50 && allGems[i].x + 50 > player.x){
+				console.log(allGems[i].x);
+				console.log(player.x);
+				allGems[i].x = HIDE_GEM;
+				allGems[i].y = HIDE_GEM;
+				player.gems += 1;
+			}
+		}
+		player.reset();
+    }
+	
+	if (player.gems == 5) {
+		player.reset();
+		player.gems = 0;
+		player.score += 1;
+		gem.reset();
+	}
 }
 
 // This listens for key presses and sends the keys to your
