@@ -6,19 +6,17 @@ var WATER_ROW = -12.50;
     Y_OFFSET = 83,
     HIDE = -101,
     Y_ARRAY = [63, 146, 229],
-	SPEED_ARRAY = [100,250,300,450],
-	ENEMY_X_ARRAY = [-100,-200,-150,-300];
+	SPEED_ARRAY = [150,250,300,450],
+	ENEMY_X_ARRAY = [-100,-150,-200,-250,-300];
 
 /* Define Enemy class. All instances of the enemy class will acquire the 
    variables declared within the class.
 */
 var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
-    this.x = ENEMY_X_ARRAY[Math.floor(Math.random() * 4)];
+    this.x = ENEMY_X_ARRAY[Math.floor(Math.random() * 5)];
     this.y = Y_ARRAY[Math.floor(Math.random() * 3)];
     this.speed =  SPEED_ARRAY[Math.floor(Math.random() * 4)];
-	this.width = 50;
-    this.height = 50;
 };
 
 Enemy.prototype.update = function(dt) {
@@ -26,7 +24,7 @@ Enemy.prototype.update = function(dt) {
 	this.x += this.speed * dt;
 	if (this.x < -500) {
         this.sprite = 'images/enemy-bug.png';
-        this.x = ENEMY_X_ARRAY[Math.floor(Math.random() * 4)];
+        this.x = ENEMY_X_ARRAY[Math.floor(Math.random() * 5)];
         this.speed = SPEED_ARRAY[Math.floor(Math.random() * 4)];
         this.x += this.speed * dt;
         this.y = Y_ARRAY[Math.floor(Math.random() * 3)];
@@ -38,7 +36,7 @@ Enemy.prototype.update = function(dt) {
 
 Enemy.prototype.reset = function() {
 	this.speed = SPEED_ARRAY[Math.floor(Math.random() * 4)];
-	this.x = ENEMY_X_ARRAY[Math.floor(Math.random() * 4)];
+	this.x = ENEMY_X_ARRAY[Math.floor(Math.random() * 5)];
     this.y = Y_ARRAY[Math.floor(Math.random() * 3)];
  }
 
@@ -55,15 +53,15 @@ Enemy.prototype.render = function() {
 var Player = function(x,y) {
 	this.x = x;
 	this.y = y;
+	this.score = 0;
 	this.sprite = 'images/char-boy.png';
-	this.width = 50;
-    this.height = 50;
 };
 
 Player.prototype.update = function(dt) {
 	this.x * (dt);
 	this.y * (dt);
 	if (this.y <= WATER_ROW){
+		this.score += 1;
 		player.reset();
 	}	
 };
@@ -104,24 +102,37 @@ Player.prototype.handleInput = function(direction){
 
 //Life class. Displays and tracks number of hearts/lives
 var Life = function() {
-	//this.sprite = 'images/Heart.png';
     this.number = LIFE_NUMBER;
 };
 
 //Draw the 3 hearts
 Life.prototype.render = function() {
-
     for (var x = 0; x < this.number; x++) {
         ctx.drawImage(Resources.get('images/Heart.png'), x * 45, 525, 50, 70);
     }
-
 };
 
 Life.prototype.die = function() {
-	//if (this.number == 0)
-	//	gameOver();
 	this.number = this.number - 1;
+	if (this.number == -1) {
+		this.number = LIFE_NUMBER;
+		score.reset();
+	}
 };
+
+//Score class - draw the score on the screen
+var Score = function() {
+	player.score = 0;
+};
+
+Score.prototype.render = function() {
+	ctx.font = 'Bold 30px Verdana';
+	ctx.fillText('Score : ' + player.score, 309, 575);
+}
+
+Score.prototype.reset = function() {
+	 player.score = 0;
+ }
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -134,11 +145,12 @@ allEnemies.push(new Enemy());
  
  var player = new Player(200,400);
  var life = new Life();
+ var score = new Score();
  
  function checkCollisions(allEnemies, player) {
     for(var i = 0; i < 3; i++) {
-		if (allEnemies[i].x < player.x + player.width && allEnemies[i].x + allEnemies[i].width > player.x &&
-            allEnemies[i].y < player.y +  player.height && allEnemies[i].height + allEnemies[i].y > player.y){
+		if (allEnemies[i].x < player.x + 50 && allEnemies[i].x + 50 > player.x &&
+            allEnemies[i].y < player.y +  50 && 50 + allEnemies[i].y > player.y){
 				life.die()
 				player.reset();
         }
