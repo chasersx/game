@@ -213,7 +213,7 @@ function checkGemCollisions(allGems, player) {
 		player.reset();
 		player.gems = 0;
 		player.score += 1;
-		gem.reset();
+		
 	}
 }
 
