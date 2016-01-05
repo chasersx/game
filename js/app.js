@@ -1,5 +1,5 @@
 //Declare all variables that are going to be constant and hence, immutable.
-var WATER_ROW = -12.50;
+var WATER_ROW = -12.50,
 	LIFE_NUMBER = 3,
     HIDE_GEM = -101,
     Y_ARRAY = [63, 146, 229],
@@ -34,6 +34,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -48,8 +49,9 @@ var Player = function() {
 };
 
 Player.prototype.update = function(dt) {
-	this.x * (dt);
-	this.y * (dt);
+	//no op
+	//this.x * (dt);
+	//this.y * (dt);
 };
 
 // Draw the player on the screen, required method for game
@@ -58,7 +60,7 @@ Player.prototype.render = function() {
 };
 
 Player.prototype.handleInput = function(direction){
-	if (this.x == 0 && (direction === 'left' || direction === 'a')){
+	if (this.x === 0 && (direction === 'left' || direction === 'a')){
 		return;
 	}
 	if (this.x == 400 && (direction === 'right' || direction === 'd')){
@@ -81,10 +83,10 @@ Player.prototype.handleInput = function(direction){
 	}
 	if(direction === 'enter') {
 		life.number = LIFE_NUMBER;
-		player.gems = 0;
+		this.gems = 0;
 		gemReset(allGems);
 		score.reset();
-		player.reset();
+		this.reset();
 	}
 };
  
@@ -107,7 +109,7 @@ Life.prototype.render = function() {
 
 Life.prototype.die = function() {
 	this.number = this.number - 1;
-	if (this.number == 0) {
+	if (this.number === 0) {
 		this.number = LIFE_NUMBER;
 		score.reset();
 		player.gems = 0;
@@ -132,7 +134,7 @@ function gemReset(allGems) {
 		allGems[i].x = i * 100 + 15;	
 		allGems[i].y = 20;
 	}
-};
+}
 
 //Score class - draw the score on the screen
 var Score = function() {
@@ -154,8 +156,8 @@ Score.prototype.reset = function() {
 
 var allEnemies = [];
 for(var i=0; i<3; i++){
-allEnemies.push(new Enemy());
-};
+	allEnemies.push(new Enemy());
+}
  
 var player = new Player();
 var life = new Life();
@@ -183,7 +185,7 @@ function checkCollisions(allEnemies, player) {
 				player.reset();
         }
     }
-};
+}
 
 function checkGemCollisions(allGems, player) {
 	if (player.y == WATER_ROW) {
@@ -202,7 +204,7 @@ function checkGemCollisions(allGems, player) {
 		player.score += 1;
 		gemReset(allGems);
 	}
-};
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
